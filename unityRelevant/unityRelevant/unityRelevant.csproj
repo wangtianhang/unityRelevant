@@ -44,6 +44,10 @@
     <Compile Include="EventMgr.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="socketMSDN\AsynchronousClient.cs" />
+    <Compile Include="socketMSDN\AsynchronousServer.cs" />
+    <Compile Include="socketMSDN\SynchronousClient.cs" />
+    <Compile Include="socketMSDN\SynchronousServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
