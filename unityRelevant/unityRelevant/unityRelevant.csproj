@@ -48,6 +48,7 @@
     <Compile Include="socketMSDN\AsynchronousServer.cs" />
     <Compile Include="socketMSDN\SynchronousClient.cs" />
     <Compile Include="socketMSDN\SynchronousServer.cs" />
+    <Compile Include="TcpClientDemo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
