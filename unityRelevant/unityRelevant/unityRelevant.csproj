@@ -50,6 +50,7 @@
     <Compile Include="socketMSDN\MSDNSynchronousClient.cs" />
     <Compile Include="socketMSDN\MSDNSynchronousServer.cs" />
     <Compile Include="socketMSDN\TcpClientDemo.cs" />
+    <Compile Include="socketMSDN\TcpListenerDemo.cs" />
     <Compile Include="socketMSDN\WebRequestDemo.cs" />
   </ItemGroup>
   <ItemGroup>
