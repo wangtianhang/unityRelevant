@@ -3,7 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-public class SynchronousSocketListener
+public class MSDNSynchronousSocketListener
 {
 
     // Incoming data from the client.

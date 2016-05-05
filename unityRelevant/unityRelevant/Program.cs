@@ -10,7 +10,8 @@ namespace unityRelevant
     {
         static void Main(string[] args)
         {
-
+            DnsDemo.DoGetHostEntry("baidu.com");
+            Console.Read();
         }
     }
 }

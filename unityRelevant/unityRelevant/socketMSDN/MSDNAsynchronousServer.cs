@@ -17,12 +17,12 @@ public class StateObjectServer2
     public StringBuilder sb = new StringBuilder();
 }
 
-public class AsynchronousSocketListener
+public class MSDNAsynchronousSocketListener
 {
     // Thread signal.
     public static ManualResetEvent allDone = new ManualResetEvent(false);
 
-    public AsynchronousSocketListener()
+    public MSDNAsynchronousSocketListener()
     {
     }
 

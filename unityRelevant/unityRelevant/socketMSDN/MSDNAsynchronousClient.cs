@@ -17,7 +17,7 @@ public class StateObjectClient
     public StringBuilder sb = new StringBuilder();
 }
 
-public class AsynchronousClient
+public class MSDNAsynchronousClient
 {
     // The port number for the remote device.
     private const int port = 11000;
