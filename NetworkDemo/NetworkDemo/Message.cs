@@ -13,7 +13,7 @@ public enum MessageId
     LoginS2C,
 }
 
-class MessageExchangeSeq
+public class MessageExchangeSeq
 {
     public Int32 m_seq = 0;
 
@@ -40,7 +40,7 @@ class MessageExchangeSeq
     }
 }
 
-class MessageExchangeSeqS2C
+public class MessageExchangeSeqS2C
 {
     public Int32 m_seq = 0;
 
@@ -67,7 +67,7 @@ class MessageExchangeSeqS2C
     }
 }
 
-class MessageLogin
+public class MessageLogin
 {
     public string m_content = "";
 
@@ -94,7 +94,7 @@ class MessageLogin
     }
 }
 
-class MessageLoginS2C
+public class MessageLoginS2C
 {
     public string m_content = "";
 
