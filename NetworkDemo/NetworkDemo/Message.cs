@@ -13,15 +13,19 @@ public enum MessageId
     LoginS2C,
 }
 
+/// <summary>
+/// 实际项目中可以跟着心跳交互
+/// 服务器不缓存消息队列，重新连接时重新拉取数据
+/// </summary>
 public class MessageExchangeSeq
 {
-    public Int32 m_seq = 0;
+    //public Int32 m_seq = 0;
 
     public static Stream Serilization(MessageExchangeSeq msg)
     {
         MemoryStream memoryStream = new MemoryStream();
         BinaryWriter writer = new BinaryWriter(memoryStream);
-        writer.Write(msg.m_seq);
+        //writer.Write(msg.m_seq);
         return memoryStream;
     }
 
@@ -35,11 +39,16 @@ public class MessageExchangeSeq
 
         MessageExchangeSeq msg = new MessageExchangeSeq();
         BinaryReader reader = new BinaryReader(stream);
-        msg.m_seq = reader.ReadInt32();
+        //msg.m_seq = reader.ReadInt32();
         return msg;
     }
 }
 
+/// <summary>
+/// 实际项目中可以跟着心跳交互
+/// 客户端收到seq后才清理自己的消息队列,清理队列中seq小于等于服务器seq的消息
+/// 如果收到0，说明服务器刚初始化与客户端的会话或者服务器与客户端的会话已经严重超时，清空消息队列
+/// </summary>
 public class MessageExchangeSeqS2C
 {
     public Int32 m_seq = 0;
@@ -120,4 +129,5 @@ public class MessageLoginS2C
         return msg;
     }
 }
+
 
