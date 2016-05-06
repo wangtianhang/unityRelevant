@@ -19,7 +19,7 @@ namespace ClientDemo
             messageClient.m_sendMsgEvent += uiListener.SendingCallback;
             messageClient.m_receiveMsgEvent += uiListener.ReceiveCallback;
 
-            messageClient.ReceiveMessage((int)MessageId.LoginS2C, LoginCallback);
+            messageClient.RegisterReceiveMessage((int)MessageId.LoginS2C, LoginCallback);
             MessageLoginS2C login = new MessageLoginS2C();
             login.m_content = "login";
             MemoryStream stream = MessageLoginS2C.Serilization(login);

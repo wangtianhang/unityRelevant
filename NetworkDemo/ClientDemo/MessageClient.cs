@@ -26,6 +26,10 @@ public class MessageClient
     float m_accSeqTimer = 0;
     float m_getSeqTimeSpan = 15000;
 
+    Dictionary<int, ReceiveMsgCallback> m_receiveCallbackDic = new Dictionary<int, ReceiveMsgCallback>();
+
+    List<Packet> m_cachePacketList = new List<Packet>();
+
     public MessageClient()
     {
         m_netlayerClient = new NetlayerClient();
@@ -40,7 +44,10 @@ public class MessageClient
         if(m_accSeqTimer >= m_getSeqTimeSpan)
         {
             m_accSeqTimer = 0;
-            SendMessage((int)MessageId.ExchangeSeq, null);
+            if(m_netlayerClient.IsConnected())
+            {
+                SendMessage((int)MessageId.ExchangeSeq, null);
+            }
         }
     }
 
@@ -62,6 +69,8 @@ public class MessageClient
         }
         else
         {
+            m_netlayerClient.ReceiveAsync(this.OnReceiveMessage);
+            RegisterReceiveMessage((int)MessageId.ExchangeSeqS2C, ServerSeqCallback);
             SendMessage((int)MessageId.ExchangeSeq, null);
         }
     }
@@ -76,6 +85,8 @@ public class MessageClient
         packet.m_seq = m_seq;
         packet.m_data = data.ToArray();
 
+        m_cachePacketList.Add(packet);
+
         m_netlayerClient.SendAsync(packet, SendCallback);
     }
 
@@ -84,9 +95,54 @@ public class MessageClient
         Console.WriteLine("SendCallback " + error);
     }
 
-    public void ReceiveMessage(int msgId, ReceiveMsgCallback callback)
+    public void RegisterReceiveMessage(int msgId, ReceiveMsgCallback callback)
     {
+        //ReceiveMsgCallback callback = null;
+        //m_receiveCallbackDic.TryGetValue(msgId, out callback);
+        if(!m_receiveCallbackDic.ContainsKey(msgId))
+        {
+            m_receiveCallbackDic.Add(msgId, callback);
+        }
+    }
 
+    void OnReceiveMessage(SocketError error, int msgId, MemoryStream data)
+    {
+        if(error != SocketError.Success)
+        {
+            Console.WriteLine("OnReceiveMessage " + error);
+        }
+        else
+        {
+            ReceiveMsgCallback callback = null;
+            m_receiveCallbackDic.TryGetValue(msgId, out callback);
+            callback(msgId, data);
+        }
+    }
+
+    void ServerSeqCallback(int msgId, MemoryStream data)
+    {
+        MessageExchangeSeqS2C s2c = MessageExchangeSeqS2C.Deserilization(data);
+        int seq = s2c.m_seq;
+        if(seq == 0)
+        {
+            m_cachePacketList.Clear();
+        }
+        else
+        {
+            List<Packet> removeList = new List<Packet>();
+            for (int i = 0; i < m_cachePacketList.Count; ++i )
+            {
+                Packet iter = m_cachePacketList[i];
+                if(iter.m_seq <= seq)
+                {
+                    removeList.Add(iter);
+                }
+            }
+            for (int i = 0; i < removeList.Count; ++i )
+            {
+                m_cachePacketList.Remove(removeList[i]);
+            }
+        }
     }
 
     void OnDisconnct()

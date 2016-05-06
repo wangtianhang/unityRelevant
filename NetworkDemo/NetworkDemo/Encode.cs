@@ -34,7 +34,56 @@ public class EncodeHelper
 
 public class DecodeHelper
 {
+    List<byte>  m_lastBytes = new List<byte>();
 
+    public List<Packet> Decode(byte[] data)
+    {
+        m_lastBytes.AddRange(data);
+        
+        List<Packet> packets = new List<Packet>();
+
+        while (m_lastBytes.Count > 12)
+        {
+            int offset = 0;
+            byte[] executeBytes = m_lastBytes.ToArray();
+            int msgId = BitConverter.ToInt32(executeBytes, offset);
+            offset += 4;
+            int seq = BitConverter.ToInt32(executeBytes, offset);
+            offset += 4;
+            int dataSize = BitConverter.ToInt32(executeBytes, offset);
+            offset += 4;
+
+            if (BitConverter.IsLittleEndian)
+            {
+                msgId = IPAddress.NetworkToHostOrder(msgId);
+                seq = IPAddress.NetworkToHostOrder(seq);
+                dataSize = IPAddress.NetworkToHostOrder(dataSize);
+            }
+
+//             if (data_size < 0)
+//             {
+//                 return null;
+//             }
+
+            if (executeBytes.Length >= (dataSize + 12))
+            {
+                byte[] msgBytes = new byte[dataSize];
+                Buffer.BlockCopy(executeBytes, offset, msgBytes, 0, dataSize);
+                Packet packet = new Packet();
+                packet.m_msgId = msgId;
+                packet.m_seq = seq;
+                packet.m_data = msgBytes;
+                packets.Add(packet);
+                offset += dataSize;
+                m_lastBytes.RemoveRange(0, offset);
+            }
+            else
+            {
+                break;
+            }
+        }
+        return packets;
+    }
 }
 
 public class Packet
