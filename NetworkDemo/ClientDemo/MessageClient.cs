@@ -116,6 +116,8 @@ public class MessageClient
             ReceiveMsgCallback callback = null;
             m_receiveCallbackDic.TryGetValue(msgId, out callback);
             callback(msgId, data);
+
+            m_receiveMsgEvent(msgId);
         }
     }
 
