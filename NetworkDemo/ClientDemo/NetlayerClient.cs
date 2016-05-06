@@ -62,7 +62,7 @@ class NetlayerClient
         m_reconnectCounter--;
     }
 
-    public void OnUpdate()
+    public void OnUpdate(float delta)
     {
         if (m_setReconnect)
         {

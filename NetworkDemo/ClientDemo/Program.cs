@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Net.Sockets;
+using System.Threading;
 
 namespace ClientDemo
 {
@@ -21,8 +22,17 @@ namespace ClientDemo
             messageClient.ReceiveMessage((int)MessageId.LoginS2C, LoginCallback);
             MessageLoginS2C login = new MessageLoginS2C();
             login.m_content = "login";
-            Stream stream = MessageLoginS2C.Serilization(login);
+            MemoryStream stream = MessageLoginS2C.Serilization(login);
             messageClient.SendMessage((int)MessageId.Login, stream);
+
+            DateTime lastTime = DateTime.Now;
+            while(true)
+            {
+                TimeSpan span = DateTime.Now - lastTime;
+                messageClient.OnUpdate(span.Milliseconds);
+                Thread.Sleep(30);
+                lastTime = DateTime.Now;
+            }
 
             Console.Read();
         }
@@ -32,8 +42,9 @@ namespace ClientDemo
             Console.WriteLine("ConnectCallback " + error);
         }
 
-        static void LoginCallback(int msgId, Stream data)
+        static void LoginCallback(int msgId, MemoryStream data)
         {
+            //MemoryStream stream = data as MemoryStream;
             MessageLoginS2C s2c = MessageLoginS2C.Deserilization(data);
             Console.WriteLine("client login " + s2c.m_content);
         }

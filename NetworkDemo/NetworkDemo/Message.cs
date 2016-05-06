@@ -21,7 +21,7 @@ public class MessageExchangeSeq
 {
     //public Int32 m_seq = 0;
 
-    public static Stream Serilization(MessageExchangeSeq msg)
+    public static MemoryStream Serilization(MessageExchangeSeq msg)
     {
         MemoryStream memoryStream = new MemoryStream();
         BinaryWriter writer = new BinaryWriter(memoryStream);
@@ -29,13 +29,13 @@ public class MessageExchangeSeq
         return memoryStream;
     }
 
-    public static MessageExchangeSeq Deserilization(Stream stream)
+    public static MessageExchangeSeq Deserilization(MemoryStream stream)
     {
-        MemoryStream memoryStram = stream as MemoryStream;
-        if(memoryStram == null)
-        {
-            throw new InvalidOperationException();
-        }
+//         MemoryStream memoryStram = stream as MemoryStream;
+//         if(memoryStram == null)
+//         {
+//             throw new InvalidOperationException();
+//         }
 
         MessageExchangeSeq msg = new MessageExchangeSeq();
         BinaryReader reader = new BinaryReader(stream);
@@ -53,7 +53,7 @@ public class MessageExchangeSeqS2C
 {
     public Int32 m_seq = 0;
 
-    public static Stream Serilization(MessageExchangeSeqS2C msg)
+    public static MemoryStream Serilization(MessageExchangeSeqS2C msg)
     {
         MemoryStream memoryStream = new MemoryStream();
         BinaryWriter writer = new BinaryWriter(memoryStream);
@@ -61,13 +61,13 @@ public class MessageExchangeSeqS2C
         return memoryStream;
     }
 
-    public static MessageExchangeSeqS2C Deserilization(Stream stream)
+    public static MessageExchangeSeqS2C Deserilization(MemoryStream stream)
     {
-        MemoryStream memoryStram = stream as MemoryStream;
-        if (memoryStram == null)
-        {
-            throw new InvalidOperationException();
-        }
+//         MemoryStream memoryStram = stream as MemoryStream;
+//         if (memoryStram == null)
+//         {
+//             throw new InvalidOperationException();
+//         }
 
         MessageExchangeSeqS2C msg = new MessageExchangeSeqS2C();
         BinaryReader reader = new BinaryReader(stream);
@@ -80,7 +80,7 @@ public class MessageLogin
 {
     public string m_content = "";
 
-    public static Stream Serilization(MessageLogin msg)
+    public static MemoryStream Serilization(MessageLogin msg)
     {
         MemoryStream memoryStream = new MemoryStream();
         BinaryWriter writer = new BinaryWriter(memoryStream);
@@ -88,13 +88,13 @@ public class MessageLogin
         return memoryStream;
     }
 
-    public static MessageLogin Deserilization(Stream stream)
+    public static MessageLogin Deserilization(MemoryStream stream)
     {
-        MemoryStream memoryStram = stream as MemoryStream;
-        if (memoryStram == null)
-        {
-            throw new InvalidOperationException();
-        }
+//         MemoryStream memoryStram = stream as MemoryStream;
+//         if (memoryStram == null)
+//         {
+//             throw new InvalidOperationException();
+//         }
 
         MessageLogin msg = new MessageLogin();
         BinaryReader reader = new BinaryReader(stream);
@@ -107,7 +107,7 @@ public class MessageLoginS2C
 {
     public string m_content = "";
 
-    public static Stream Serilization(MessageLoginS2C msg)
+    public static MemoryStream Serilization(MessageLoginS2C msg)
     {
         MemoryStream memoryStream = new MemoryStream();
         BinaryWriter writer = new BinaryWriter(memoryStream);
@@ -115,13 +115,13 @@ public class MessageLoginS2C
         return memoryStream;
     }
 
-    public static MessageLoginS2C Deserilization(Stream stream)
+    public static MessageLoginS2C Deserilization(MemoryStream stream)
     {
-        MemoryStream memoryStram = stream as MemoryStream;
-        if (memoryStram == null)
-        {
-            throw new InvalidOperationException();
-        }
+//         MemoryStream memoryStram = stream as MemoryStream;
+//         if (memoryStram == null)
+//         {
+//             throw new InvalidOperationException();
+//         }
 
         MessageLoginS2C msg = new MessageLoginS2C();
         BinaryReader reader = new BinaryReader(stream);
