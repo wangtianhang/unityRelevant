@@ -104,7 +104,7 @@ class NetlayerClient
 
             SocketAsyncEventArgs receiveArgs = new SocketAsyncEventArgs();
             receiveArgs.Completed += OnReceiveComplete;
-            receiveArgs.RemoteEndPoint = m_remoteEP;
+            //receiveArgs.RemoteEndPoint = m_remoteEP;
             m_socket.ReceiveAsync(receiveArgs);
         }
         else if(e.SocketError == SocketError.WouldBlock)
@@ -115,7 +115,7 @@ class NetlayerClient
 
                 SocketAsyncEventArgs receiveArgs = new SocketAsyncEventArgs();
                 receiveArgs.Completed += OnReceiveComplete;
-                receiveArgs.RemoteEndPoint = m_remoteEP;
+                //receiveArgs.RemoteEndPoint = m_remoteEP;
                 m_socket.ReceiveAsync(receiveArgs);
             }
             else
@@ -147,7 +147,13 @@ class NetlayerClient
     {
         //lock (m_receivelock)
         {
-            if(e.SocketError == SocketError.Success)
+            if(e.BytesTransferred == 0)
+            {
+                m_socket.Close();
+                //m_receiveCallback(SocketError.Shutdown, 0, null);
+                m_setNotifyDisconnect = true;
+            }
+            else if(e.SocketError == SocketError.Success)
             {
                 byte[] receiveBytes = new byte[e.BytesTransferred];
                 Buffer.BlockCopy(e.Buffer, 0, receiveBytes, 0, e.BytesTransferred);
@@ -156,7 +162,7 @@ class NetlayerClient
 
                 SocketAsyncEventArgs receiveArgs = new SocketAsyncEventArgs();
                 receiveArgs.Completed += OnReceiveComplete;
-                receiveArgs.RemoteEndPoint = m_remoteEP;
+                //receiveArgs.RemoteEndPoint = m_remoteEP;
                 m_socket.ReceiveAsync(receiveArgs);
             }
             else
@@ -170,7 +176,7 @@ class NetlayerClient
     {
         SocketAsyncEventArgs sendArgs = new SocketAsyncEventArgs();
         sendArgs.Completed += OnSendComplete;
-        sendArgs.RemoteEndPoint = m_remoteEP;
+        //sendArgs.RemoteEndPoint = m_remoteEP;
         //byte[] bytes = data.get
         byte[] data = m_encodeHelper.Encode(packet);
 
@@ -189,8 +195,7 @@ class NetlayerClient
 
                 m_setNotifyDisconnect = true;
             }
-
-            if (e.SocketError != SocketError.Success)
+            else if (e.SocketError != SocketError.Success)
             {
                 m_sendCallback(e.SocketError);
             }

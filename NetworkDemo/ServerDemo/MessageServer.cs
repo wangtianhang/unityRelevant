@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.IO;
 
 class MessageServer
 {
@@ -32,7 +32,7 @@ class MessageServer
 
     public void AcceptBegin()
     {
-        m_netlayerServer.AcceptAsync(AcceptCallback);
+        m_netlayerServer.AcceptAsync(AcceptCallback, ConcurrentReceiveCallback);
     }
 
     void AcceptCallback(int channelId)
@@ -40,7 +40,12 @@ class MessageServer
 
     }
 
-    void ReceiveAsync()
+    void SendAsync(int clientId, int msgId, MemoryStream data)
+    {
+
+    }
+
+    void ConcurrentReceiveCallback(int channelId, Packet packet)
     {
 
     }
