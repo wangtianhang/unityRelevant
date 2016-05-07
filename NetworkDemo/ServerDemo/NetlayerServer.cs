@@ -9,8 +9,6 @@ using System.IO;
 
 class NetlayerServer
 {
-    Socket m_listenSocket = null;
-
     public delegate void AcceptCallback(int channelId);
     AcceptCallback m_accpetCallback = null;
 
@@ -19,6 +17,8 @@ class NetlayerServer
 
     public delegate void ReceiveCallback(int channelId, Packet packet);
     ReceiveCallback m_receiveCallback = null;
+
+    Socket m_listenSocket = null;
 
     int m_channelIdGenerator = 0;
     class ChannelInfo
@@ -31,6 +31,26 @@ class NetlayerServer
     EncodeHelper m_encodeHelper = new EncodeHelper();
 
     ConcurrentDictionary<int, ChannelInfo> m_channelConcurrentDic = new ConcurrentDictionary<int, ChannelInfo>();
+
+    enum ChannelOperation
+    {
+        None,
+        Add,
+        Packet,
+        Close,
+    }
+
+    class ChannelOperationData
+    {
+        public int m_channelId = 0;
+        public ChannelOperation m_operation = ChannelOperation.None; 
+        public Packet m_packet = null;
+    }
+
+    //ConcurrentQueue<int> m_addChannelQueue = new ConcurrentQueue<int>();
+    //ConcurrentQueue<PacketData> m_packetQueue = new ConcurrentQueue<PacketData>();
+    //ConcurrentQueue<int> m_closeChannelQueue = new ConcurrentQueue<int>();
+    ConcurrentQueue<ChannelOperationData> m_channelOperationConcurrentQueue = new ConcurrentQueue<ChannelOperationData>();
 
     public NetlayerServer()
     {
@@ -103,9 +123,16 @@ class NetlayerServer
             ChannelInfo channelInfo = new ChannelInfo();
             channelInfo.m_channelId = m_channelIdGenerator;
             channelInfo.m_socket = e.AcceptSocket;
-            m_channelConcurrentDic.TryAdd(channelInfo.m_channelId, channelInfo);
+            //lock (m_channelConcurrentDic)
+            {
+                m_channelConcurrentDic.TryAdd(channelInfo.m_channelId, channelInfo);
+            }
 
-            m_accpetCallback(m_channelIdGenerator);
+            ChannelOperationData channelOperation = new ChannelOperationData();
+            channelOperation.m_channelId = channelInfo.m_channelId;
+            channelOperation.m_operation = ChannelOperation.Add;
+            m_channelOperationConcurrentQueue.Enqueue(channelOperation);
+            //m_accpetCallback(m_channelIdGenerator);
 
             SocketAsyncEventArgs receiveArgs = new SocketAsyncEventArgs();
             receiveArgs.Completed += OnConcurrentReceiveComplete;
@@ -125,9 +152,16 @@ class NetlayerServer
         if(e.BytesTransferred == 0)
         {
             ChannelInfo channelInfo = null;
-            m_channelConcurrentDic.TryRemove(channelId, out channelInfo);
+            //lock (m_channelConcurrentDic)
+            {
+                m_channelConcurrentDic.TryRemove(channelId, out channelInfo);
+            }
             channelInfo.m_socket.Close();
-            m_closeCallback(channelInfo.m_channelId);
+            //m_closeCallback(channelInfo.m_channelId);
+            ChannelOperationData channelOperation = new ChannelOperationData();
+            channelOperation.m_channelId = channelInfo.m_channelId;
+            channelOperation.m_operation = ChannelOperation.Close;
+            m_channelOperationConcurrentQueue.Enqueue(channelOperation);
         }
         else if(e.SocketError == SocketError.Success)
         {
@@ -141,7 +175,13 @@ class NetlayerServer
             for (int i = 0; i < packet.Count; ++i )
             {
                 Packet iter = packet[i];
-                m_receiveCallback(channelId, iter);
+                //m_receiveCallback(channelId, iter);
+
+                ChannelOperationData channelOperation = new ChannelOperationData();
+                channelOperation.m_channelId = channelInfo.m_channelId;
+                channelOperation.m_operation = ChannelOperation.Packet;
+                channelOperation.m_packet = iter;
+                m_channelOperationConcurrentQueue.Enqueue(channelOperation);
             }
 
             SocketAsyncEventArgs receiveArgs = new SocketAsyncEventArgs();
@@ -182,15 +222,38 @@ class NetlayerServer
         {
             ChannelInfo channelInfo = null;
             //m_channelConcurrentDic.TryGetValue(channelId, out channelInfo);
-            m_channelConcurrentDic.TryRemove(channelId, out channelInfo);
+            //lock (m_channelConcurrentDic)
+            {
+                m_channelConcurrentDic.TryRemove(channelId, out channelInfo);
+            }
             channelInfo.m_socket.Close();
-            m_closeCallback(channelInfo.m_channelId);
+            //m_closeCallback(channelInfo.m_channelId);
+            ChannelOperationData channelOperation = new ChannelOperationData();
+            channelOperation.m_channelId = channelInfo.m_channelId;
+            channelOperation.m_operation = ChannelOperation.Close;
+            m_channelOperationConcurrentQueue.Enqueue(channelOperation);
         }
     }
 
     public void OnUpdate(int delta)
     {
-
+        ChannelOperationData channelOperation = null;
+        m_channelOperationConcurrentQueue.TryDequeue(out channelOperation);
+        while (channelOperation != null)
+        {
+            if(channelOperation.m_operation == ChannelOperation.Add)
+            {
+                m_accpetCallback(channelOperation.m_channelId);
+            }
+            else if(channelOperation.m_operation == ChannelOperation.Packet)
+            {
+                m_receiveCallback(channelOperation.m_channelId, channelOperation.m_packet);
+            }
+            else if (channelOperation.m_operation == ChannelOperation.Close)
+            {
+                m_closeCallback(channelOperation.m_channelId);
+            }
+        }
     }
 }
 

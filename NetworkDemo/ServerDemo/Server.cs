@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.IO;
 
 class Server
 {
@@ -46,6 +46,11 @@ class Server
     void ClientDisconnectCallback(int clientId)
     {
         m_clientDic.Remove(clientId);
+    }
+
+    void OnClientMessage(int client, int msgId, MemoryStream data)
+    {
+
     }
 }
 
