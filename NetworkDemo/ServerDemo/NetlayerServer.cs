@@ -14,6 +14,9 @@ class NetlayerServer
     public delegate void AcceptCallback(int channelId);
     AcceptCallback m_accpetCallback = null;
 
+    public delegate void CloseCallback(int channelId);
+    CloseCallback m_closeCallback = null;
+
     public delegate void ReceiveCallback(int channelId, Packet packet);
     ReceiveCallback m_receiveCallback = null;
 
@@ -53,10 +56,11 @@ class NetlayerServer
         }
     }
 
-    public void Listen(int backlog)
+    public void Listen()
     {
         try
         {
+            int backlog = 5;
             m_listenSocket.Listen(backlog);
 
             Console.WriteLine("Listen end");
@@ -68,11 +72,12 @@ class NetlayerServer
         }
     }
 
-    public void AcceptAsync(AcceptCallback acceptCallback, ReceiveCallback receiveCallback)
+    public void AcceptAsync(AcceptCallback acceptCallback, CloseCallback closeCallback, ReceiveCallback receiveCallback)
     {
         Console.WriteLine("AcceptAsync ");
 
         m_accpetCallback = acceptCallback;
+        m_closeCallback = closeCallback;
         m_receiveCallback = receiveCallback;
 
         _AcceptAsync();
@@ -122,7 +127,7 @@ class NetlayerServer
             ChannelInfo channelInfo = null;
             m_channelConcurrentDic.TryRemove(channelId, out channelInfo);
             channelInfo.m_socket.Close();
-            
+            m_closeCallback(channelInfo.m_channelId);
         }
         else if(e.SocketError == SocketError.Success)
         {
@@ -150,7 +155,7 @@ class NetlayerServer
 //         }
     }
 
-    void SendAsync(int channel, Packet packet)
+    public void SendAsync(int channel, Packet packet)
     {
         ChannelInfo channelInfo = null;
         m_channelConcurrentDic.TryGetValue(channel, out channelInfo);
@@ -179,7 +184,13 @@ class NetlayerServer
             //m_channelConcurrentDic.TryGetValue(channelId, out channelInfo);
             m_channelConcurrentDic.TryRemove(channelId, out channelInfo);
             channelInfo.m_socket.Close();
+            m_closeCallback(channelInfo.m_channelId);
         }
+    }
+
+    public void OnUpdate(int delta)
+    {
+
     }
 }
 

@@ -20,9 +20,9 @@ namespace ClientDemo
             messageClient.m_receiveMsgEvent += uiListener.ReceiveCallback;
 
             messageClient.RegisterReceiveMessage((int)MessageId.LoginS2C, LoginCallback);
-            MessageLoginS2C login = new MessageLoginS2C();
-            login.m_content = "login";
-            MemoryStream stream = MessageLoginS2C.Serilization(login);
+            MessageLogin login = new MessageLogin();
+            login.m_clientId = 1;
+            MemoryStream stream = MessageLogin.Serilization(login);
             messageClient.SendMessage((int)MessageId.Login, stream);
 
             DateTime lastTime = DateTime.Now;

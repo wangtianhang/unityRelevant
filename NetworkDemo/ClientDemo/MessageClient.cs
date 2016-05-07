@@ -36,7 +36,7 @@ public class MessageClient
         m_netlayerClient.m_disconnectEvent += this.OnDisconnct;
     }
 
-    public void OnUpdate(float delta)
+    public void OnUpdate(int delta)
     {
         m_netlayerClient.OnUpdate(delta);
 

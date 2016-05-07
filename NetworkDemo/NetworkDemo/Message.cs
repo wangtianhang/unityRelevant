@@ -78,13 +78,13 @@ public class MessageExchangeSeqS2C
 
 public class MessageLogin
 {
-    public string m_content = "";
+    public Int32 m_clientId = 0;
 
     public static MemoryStream Serilization(MessageLogin msg)
     {
         MemoryStream memoryStream = new MemoryStream();
         BinaryWriter writer = new BinaryWriter(memoryStream);
-        writer.Write(msg.m_content);
+        writer.Write(msg.m_clientId);
         return memoryStream;
     }
 
@@ -98,7 +98,7 @@ public class MessageLogin
 
         MessageLogin msg = new MessageLogin();
         BinaryReader reader = new BinaryReader(stream);
-        msg.m_content = reader.ReadString();
+        msg.m_clientId = reader.ReadInt32();
         return msg;
     }
 }
