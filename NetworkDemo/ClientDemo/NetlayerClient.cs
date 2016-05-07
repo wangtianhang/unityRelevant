@@ -34,7 +34,7 @@ class NetlayerClient
     EncodeHelper m_encodeHelper = new EncodeHelper();
     DecodeHelper m_decodeHelper = new DecodeHelper();
 
-    Object m_receivelock = new object();
+    //Object m_receivelock = new object();
     Object m_sendLock = new object();
     List<Packet> m_oneFramePacketList = new List<Packet>();
 
@@ -145,7 +145,7 @@ class NetlayerClient
 
     void OnReceiveComplete(object sender, SocketAsyncEventArgs e)
     {
-        lock (m_receivelock)
+        //lock (m_receivelock)
         {
             if(e.SocketError == SocketError.Success)
             {

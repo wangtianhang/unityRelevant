@@ -71,7 +71,8 @@ public class MessageClient
         {
             m_netlayerClient.ReceiveAsync(this.OnReceiveMessage);
             RegisterReceiveMessage((int)MessageId.ExchangeSeqS2C, ServerSeqCallback);
-            SendMessage((int)MessageId.ExchangeSeq, null);
+            //SendMessage((int)MessageId.ExchangeSeq, null);
+            RegisterReceiveMessage((int)MessageId.LoginS2C, LoginCallback);
         }
     }
 
@@ -145,6 +146,11 @@ public class MessageClient
                 m_cachePacketList.Remove(removeList[i]);
             }
         }
+    }
+
+    void LoginCallback(int msgId, MemoryStream data)
+    {
+        SendMessage((int)MessageId.ExchangeSeq, null);
     }
 
     void OnDisconnct()
