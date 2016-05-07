@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
+
+
 class Server
 {
     MessageServer m_messageServer = null;
@@ -28,7 +30,7 @@ class Server
     {
         m_messageServer.Bind(ip, port);
         m_messageServer.Listen();
-        m_messageServer.AcceptBegin(ClientConnectCallback);
+        m_messageServer.AcceptBegin(ClientConnectCallback, ClientDisconnectCallback, OnClientMessage);
     }
 
     public void OnUpdate(int delta)
@@ -50,7 +52,7 @@ class Server
 
     void OnClientMessage(int client, int msgId, MemoryStream data)
     {
-
+        m_multiThradMgr.ProcessWork(client, msgId, data, m_messageServer.SendAsync);
     }
 }
 
