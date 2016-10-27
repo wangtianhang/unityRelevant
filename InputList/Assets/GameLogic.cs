@@ -7,9 +7,9 @@ using UnityEngine;
 
 class GameLogic : MonoBehaviour
 {
-    InputEventCacher m_eventCacher = new InputEventCacher();
+    InputEventCacher m_eventCacher = null;
     float m_accTimer = 0;
-    float m_oneFrameSpan = 1 / 30;
+    float m_oneFrameSpan = 1 / 30f;
 
     public void Awake()
     {
