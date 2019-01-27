@@ -18,17 +18,17 @@ public class Logic1
         m_oldLogicQua = initQua;
         m_curLogicQua = initQua;
 
-        m_logicAccTime += Test1.m_tickSpan;
+        m_logicAccTime += Config.m_tickSpan;
     }
 
     public void Tick()
     {
         // todo 计算新的pos和qua
-        m_logicAccTime += Test1.m_tickSpan;
+        m_logicAccTime += Config.m_tickSpan;
 
         float testRotateSpeed = 90;
         Vector3 euler = m_curLogicQua.eulerAngles;
-        euler.y += testRotateSpeed * Test1.m_tickSpan;
+        euler.y += testRotateSpeed * Config.m_tickSpan;
         //euler.y += Mathf.Sin(testRotateSpeed * Test1.m_tickSpan);
         m_oldLogicQua = m_curLogicQua;
         m_curLogicQua = Quaternion.Euler(euler);

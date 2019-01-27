@@ -1,15 +1,13 @@
-﻿using System;
+﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
 
 /// <summary>
-/// 最简单模式的处理
+/// 尝试在某个逻辑帧暂停
 /// </summary>
-public class Test1 : MonoBehaviour
-{
-   
+public class Test2 : MonoBehaviour {
+
+    //public static float m_tickSpan = 0.033f;
     public float m_accTime = 0;
     public Logic1 m_logic = null;
     public Render1 m_render = null;
@@ -27,7 +25,7 @@ public class Test1 : MonoBehaviour
 
     public void Update()
     {
-        if(!m_isPause)
+        if (!m_isPause)
         {
             m_accTime += Time.deltaTime;
             while (m_accTime >= Config.m_tickSpan)
@@ -39,4 +37,3 @@ public class Test1 : MonoBehaviour
         }
     }
 }
-
