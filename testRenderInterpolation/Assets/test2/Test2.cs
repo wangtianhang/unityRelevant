@@ -6,6 +6,7 @@ using UnityEngine;
 /// 逻辑帧逐步走（本地delta累加或者系统计时器for网络）
 /// 尝试在某个逻辑帧暂停,
 /// 假设有一个10秒的大delta 在中间5秒的逻辑帧执行pause命令
+/// 又有一个10秒的大delta，在中间5秒的时候取消pause
 /// 表现层可以持续update
 /// </summary>
 public class Test2 : MonoBehaviour {
@@ -14,11 +15,16 @@ public class Test2 : MonoBehaviour {
     public float m_accTime = 0;
     public Logic1 m_logic = null;
     public Render1 m_render = null;
-    static bool m_isPause = false;
+    bool m_isPause = false;
 
     void SetPause(bool flag)
     {
         m_isPause = flag;
+
+        if(!m_isPause)
+        {
+
+        }
     }
 
     public void Start()
@@ -42,10 +48,17 @@ public class Test2 : MonoBehaviour {
         while (m_accTime >= Config.m_tickSpan)
         {
             m_accTime -= Config.m_tickSpan;
+            HandleThisFrameCommand();
             Tick();
         }
 
         m_render.RenderUpdate(delta);
+    }
+
+    void HandleThisFrameCommand()
+    {
+        // todo 执行暂停命令等
+        // SetPause 等
     }
 
     void Tick()

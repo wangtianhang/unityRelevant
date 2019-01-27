@@ -18,7 +18,7 @@ public class Logic1
         m_oldLogicQua = initQua;
         m_curLogicQua = initQua;
 
-        m_logicAccTime += Config.m_tickSpan;
+        //m_logicAccTime += Config.m_tickSpan;
     }
 
     public void Tick()
