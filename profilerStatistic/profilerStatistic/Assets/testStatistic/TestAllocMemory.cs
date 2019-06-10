@@ -11,6 +11,14 @@ namespace Test
         private void Update()
         {
             List<string> test = new List<string>();
+            test.Add("haha");
+
+            Test();
+        }
+
+        void Test()
+        {
+            List<string> test = new List<string>();
             test.Add("gaga");
         }
     }
