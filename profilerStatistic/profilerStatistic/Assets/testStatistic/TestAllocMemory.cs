@@ -18,8 +18,13 @@ namespace Test
 
         void Test()
         {
-            List<string> test = new List<string>();
-            test.Add("gaga");
+            //List<string> test = new List<string>();
+            //test.Add("gaga");
+            for(int i = 0; i < 10; ++i)
+            {
+                Debug.Log("gag" + i);
+            }
+            
         }
     }
 }
