@@ -5,6 +5,7 @@ using UnityEngine.Profiling;
 
 public class HookUtils
 {
+    /*
     public struct StackData
     {
         public string m_tag;
@@ -74,6 +75,9 @@ public class HookUtils
         {
             stackData.m_span = Time.realtimeSinceStartup - stackData.m_span;
             stackData.m_alloc = Profiler.GetTotalAllocatedMemoryLong() - stackData.m_alloc;
+
+            Debug.Log("End " +  tag + " m_alloc " + stackData.m_alloc);
+            //uint test = Profiler.GetTempAllocatorSize();
             stackData.m_span -= stackData.m_childUseTime;
             stackData.m_alloc -= stackData.m_childAlloc;
 
@@ -121,5 +125,43 @@ public class HookUtils
         }
 
         Debug.Log("HookUtils.ToMessage end");
+    }
+    */
+
+    public static bool m_init = false;
+    public static List<string> m_stack = new List<string>();
+
+    public static void Begin(string tag)
+    {
+        if(!m_init)
+        {
+            m_init = true;
+            // todo init
+        }
+
+        if (tag == "SingletonMgr.Update")
+        {
+            // 打印日志 避免多次hook的情况
+            //Debug.Log("HookUtil begin " + tag);
+            if (m_stack.Count > 0 && m_stack[m_stack.Count - 1] == tag)
+            {
+                Debug.LogError("可能出现了反复hook");
+            }
+        }
+
+        m_stack.Add(tag);
+    }
+
+    public static void End(string tag)
+    {
+        if(m_stack.Count > 0 && m_stack[m_stack.Count - 1] == tag)
+        {
+            m_stack.RemoveAt(m_stack.Count - 1);
+        }
+    }
+
+    public static void ToMessage()
+    {
+
     }
 }
