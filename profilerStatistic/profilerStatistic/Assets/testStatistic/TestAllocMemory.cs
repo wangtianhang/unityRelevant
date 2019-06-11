@@ -11,10 +11,10 @@ namespace Test
     {
         private void Start()
         {
-            Profiler.logFile = "testProfiler.raw";
-            Profiler.enabled = true;
-            Profiler.enableBinaryLog = true;
-            Debug.Log("Start testProfiler.log");
+            //Profiler.logFile = "testProfiler.raw";
+            //Profiler.enabled = true;
+            //Profiler.enableBinaryLog = true;
+            //Debug.Log("Start testProfiler.log");
         }
 
         private void Update()
