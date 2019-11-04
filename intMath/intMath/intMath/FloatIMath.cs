@@ -4,7 +4,7 @@ using System;
 
 //namespace FixPoint
 //{
-    public partial class FixPointMath
+    public partial class FloatIMath
     {
         public const double Deg2Rad = 0.0174533d;
         public const double Epsilon = 1.4013e-045d;
@@ -13,9 +13,9 @@ using System;
         public const double PI = 3.14159d;
         public const double Rad2Deg = 57.2958d;
 
-        public static FloatL Abs(FloatL f)
+        public static FloatI Abs(FloatI f)
         {
-            FloatL ret = f;
+            FloatI ret = f;
             if (ret.m_numerator < 0)
             {
                 ret.m_numerator = -ret.m_numerator;
@@ -25,12 +25,12 @@ using System;
 
 
 
-        public static int CeilToInt(FloatL f)
+        public static int CeilToInt(FloatI f)
         {
-            return (int)((f.m_numerator + FloatL.m_denominator - 1) / FloatL.m_denominator);
+            return (int)((f.m_numerator + FloatI.m_denominator - 1) / FloatI.m_denominator);
         }
 
-        public static FloatL Clamp(FloatL value, FloatL min, FloatL max)
+        public static FloatI Clamp(FloatI value, FloatI min, FloatI max)
         {
             if (value < min)
             {
@@ -56,7 +56,7 @@ using System;
         return value;
     }
 
-        public static FloatL Clamp01(FloatL value)
+        public static FloatI Clamp01(FloatI value)
         {
             if (value < 0)
             {
@@ -71,21 +71,21 @@ using System;
 
     #region 三角函数
 
-    public static FloatL Asin(FloatL f)
+    public static FloatI Asin(FloatI f)
     {
         //return Math.Asin(f.ToDouble());
         // arcsinX = pi / 2 - arccosX;
-        FloatL arccosX = Acos(f);
-        return FixPointMath.PI / 2 - arccosX;
+        FloatI arccosX = Acos(f);
+        return FloatIMath.PI / 2 - arccosX;
     }
 
-    public static FloatL Atan(FloatL f)
+    public static FloatI Atan(FloatI f)
     {
         //return Math.Atan(f.ToDouble());
         throw new Exception("不应该使用atan, 考虑用atan2替代");
     }
 
-    public static FloatL Atan2(FloatL yL, FloatL xL)
+    public static FloatI Atan2(FloatI yL, FloatI xL)
     {
 //         //return Math.Atan2(y.ToDouble(), x.ToDouble());
 //         long y = yL.m_numerator;
@@ -131,43 +131,43 @@ using System;
         return Math.Atan2((double)yL, (double)xL);
     }
 
-    public static FloatL Sin(FloatL f)
+    public static FloatI Sin(FloatI f)
     {
         //int index = SinCosLookupTable.getIndex(f.m_numerator, FloatL.m_denominator);
         //return new FloatL(SinCosLookupTable.sin_table[index]) / new FloatL(SinCosLookupTable.FACTOR);
-        FloatL ret = Math.Sin((double)f);
+        FloatI ret = Math.Sin((double)f);
         return ret;
     }
 
-    public static FloatL Cos(FloatL f)
+    public static FloatI Cos(FloatI f)
     {
 //         int index = SinCosLookupTable.getIndex(f.m_numerator, FloatL.m_denominator);
 //         return new FloatL(SinCosLookupTable.cos_table[index]) / new FloatL(SinCosLookupTable.FACTOR);
-        FloatL ret = Math.Cos((double)f);
+        FloatI ret = Math.Cos((double)f);
         return ret;
     }
 
-    public static FloatL Acos(FloatL f)
+    public static FloatI Acos(FloatI f)
     {
 //         int num = (int)FixPointMath.Divide(f.m_numerator * (long)AcosLookupTable.HALF_COUNT, FloatL.m_denominator) + AcosLookupTable.HALF_COUNT;
 //         num = FixPointMath.Clamp(num, 0, AcosLookupTable.COUNT);
 //         return new FloatL((long)AcosLookupTable.table[num]) / new FloatL(10000);
-        FloatL ret = Math.Acos((double)f);
+        FloatI ret = Math.Acos((double)f);
         return ret;
     }
 
-    public static FloatL Tan(FloatL f)
+    public static FloatI Tan(FloatI f)
     {
-        FloatL sin = Sin(f);
-        FloatL cos = Cos(f);
+        FloatI sin = Sin(f);
+        FloatI cos = Cos(f);
         return sin / cos;
     }
 
     #endregion
 
-    public static FloatL DeltaAngle(FloatL current, FloatL target)
+    public static FloatI DeltaAngle(FloatI current, FloatI target)
         {
-            FloatL num = FixPointMath.Repeat(target - current, 360f);
+            FloatI num = FloatIMath.Repeat(target - current, 360f);
             if (num > 180f)
             {
                 num -= 360f;
@@ -175,23 +175,23 @@ using System;
             return num;
         }
 
-        public static FloatL Exp(FloatL power)
+        public static FloatI Exp(FloatI power)
         {
             return Math.Exp((double)power);
         }
 
-        public static FloatL Floor(FloatL f)
+        public static FloatI Floor(FloatI f)
         {
             //return Math.Floor(f.ToDouble());
             return (int)f;
         }
 
-        public static int FloorToInt(FloatL f)
+        public static int FloorToInt(FloatI f)
         {
             return (int)f;
         }
 
-        public static FloatL InverseLerp(FloatL from, FloatL to, FloatL value)
+        public static FloatI InverseLerp(FloatI from, FloatI to, FloatI value)
         {
             if (from < to)
             {
@@ -225,49 +225,49 @@ using System;
             }
         }
 
-        public static FloatL Lerp(FloatL from, FloatL to, FloatL t)
+        public static FloatI Lerp(FloatI from, FloatI to, FloatI t)
         {
-            return from + (to - from) * FixPointMath.Clamp01(t);
+            return from + (to - from) * FloatIMath.Clamp01(t);
         }
 
-        public static FloatL LerpAngle(FloatL a, FloatL b, FloatL t)
+        public static FloatI LerpAngle(FloatI a, FloatI b, FloatI t)
         {
-            FloatL num = FixPointMath.Repeat(b - a, 360f);
+            FloatI num = FloatIMath.Repeat(b - a, 360f);
             if (num > 180f)
             {
                 num -= 360f;
             }
-            return a + num * FixPointMath.Clamp01(t);
+            return a + num * FloatIMath.Clamp01(t);
         }
 
-        public static FloatL Log(FloatL f)
+        public static FloatI Log(FloatI f)
         {
             return Math.Log((double)f);
         }
 
-        public static FloatL Log(FloatL f, FloatL p)
+        public static FloatI Log(FloatI f, FloatI p)
         {
             return Math.Log((double)f, (double)p);
         }
 
-        public static FloatL Log10(FloatL f)
+        public static FloatI Log10(FloatI f)
         {
             return Math.Log10((double)f);
         }
 
-        public static FloatL Max(FloatL a, FloatL b)
+        public static FloatI Max(FloatI a, FloatI b)
         {
             return (a <= b) ? b : a;
         }
 
-    public static FloatL Max(params FloatL[] values)
+    public static FloatI Max(params FloatI[] values)
         {
             int num = values.Length;
             if (num == 0)
             {
                 return 0f;
             }
-            FloatL num2 = values[0];
+            FloatI num2 = values[0];
             for (int i = 1; i < num; i++)
             {
                 if (values[i] > num2)
@@ -278,7 +278,7 @@ using System;
             return num2;
         }
 
-        public static FloatL Min(FloatL a, FloatL b)
+        public static FloatI Min(FloatI a, FloatI b)
         {
             return (a >= b) ? b : a;
         }
@@ -288,14 +288,14 @@ using System;
         return (a >= b) ? b : a;
     }
 
-    public static FloatL Min(params FloatL[] values)
+    public static FloatI Min(params FloatI[] values)
         {
             int num = values.Length;
             if (num == 0)
             {
                 return 0f;
             }
-            FloatL num2 = values[0];
+            FloatI num2 = values[0];
             for (int i = 1; i < num; i++)
             {
                 if (values[i] < num2)
@@ -306,44 +306,44 @@ using System;
             return num2;
         }
 
-        public static FloatL MoveTowards(FloatL current, FloatL target, FloatL maxDelta)
+        public static FloatI MoveTowards(FloatI current, FloatI target, FloatI maxDelta)
         {
-            if (FixPointMath.Abs(target - current) <= maxDelta)
+            if (FloatIMath.Abs(target - current) <= maxDelta)
             {
                 return target;
             }
-            return current + FixPointMath.Sign(target - current) * maxDelta;
+            return current + FloatIMath.Sign(target - current) * maxDelta;
         }
 
-        public static FloatL MoveTowardsAngle(FloatL current, FloatL target, FloatL maxDelta)
+        public static FloatI MoveTowardsAngle(FloatI current, FloatI target, FloatI maxDelta)
         {
-            target = current + FixPointMath.DeltaAngle(current, target);
-            return FixPointMath.MoveTowards(current, target, maxDelta);
+            target = current + FloatIMath.DeltaAngle(current, target);
+            return FloatIMath.MoveTowards(current, target, maxDelta);
         }
 
-        public static FloatL PingPong(FloatL t, FloatL length)
+        public static FloatI PingPong(FloatI t, FloatI length)
         {
-            t = FixPointMath.Repeat(t, length * 2f);
-            return length - FixPointMath.Abs(t - length);
+            t = FloatIMath.Repeat(t, length * 2f);
+            return length - FloatIMath.Abs(t - length);
         }
 
-        public static FloatL Pow(FloatL f, FloatL p)
+        public static FloatI Pow(FloatI f, FloatI p)
         {
             return Math.Pow((double)f, (double)p);
         }
 
-        public static FloatL Repeat(FloatL t, FloatL length)
+        public static FloatI Repeat(FloatI t, FloatI length)
         {
-            return t - FixPointMath.Floor(t / length) * length;
+            return t - FloatIMath.Floor(t / length) * length;
         }
 
-        public static FloatL Round(FloatL f)
+        public static FloatI Round(FloatI f)
         {
             //return Math.Round(f.ToDouble());
             return (f + 0.5d);
         }
 
-        public static int RoundToInt(FloatL f)
+        public static int RoundToInt(FloatI f)
         {
             //return (int)Math.Round(f.ToDouble());
             return (int)(f + 0.5d);
@@ -359,7 +359,7 @@ using System;
             return (long)(t + 0.5f);
         }
 
-        public static FloatL Sign(FloatL f)
+        public static FloatI Sign(FloatI f)
         {
             return (f < 0f) ? -1f : 1f;
         }
@@ -375,25 +375,25 @@ using System;
         /// </summary>
         /// <param name="c"></param>
         /// <returns></returns>
-        public static FloatL SqrtOld(FloatL c)
+        public static FloatI SqrtOld(FloatI c)
         {
             if(c == 0)
             {
                 return 0;
             }
 
-            if (c < new FloatL(0))
+            if (c < new FloatI(0))
             {
-                return new FloatL(-1);
+                return new FloatI(-1);
             }
 
-            FloatL err = FloatL.Epsilon;
-            FloatL t = c;
+            FloatI err = FloatI.Epsilon;
+            FloatI t = c;
             int count = 0;
-            while (FixPointMath.Abs(t - c / t) > err * t)
+            while (FloatIMath.Abs(t - c / t) > err * t)
             {
                 count++;
-                t = (c / t + t) / new FloatL(2.0f);
+                t = (c / t + t) / new FloatI(2.0f);
                 if(count >= 20)
                 {
                     UnityEngine.Debug.LogWarning("FixPoint Sqrt " + c + " current sqrt " + t);
@@ -403,10 +403,10 @@ using System;
             return t;
         }
 
-    public static FloatL Sqrt(FloatL c)
+    public static FloatI Sqrt(FloatI c)
     {
-        ulong value = Sqrt64((ulong)(c.m_numerator * FloatL.m_denominator));
-        FloatL ret = new FloatL();
+        ulong value = Sqrt64((ulong)(c.m_numerator * FloatI.m_denominator));
+        FloatI ret = new FloatI();
         ret.m_numerator = (int)value;
         return ret;
     }
@@ -458,7 +458,7 @@ using System;
             }
         }
 
-        public static bool Approximately(FloatL a, FloatL b)
+        public static bool Approximately(FloatI a, FloatI b)
     {
         return a == b;
     }

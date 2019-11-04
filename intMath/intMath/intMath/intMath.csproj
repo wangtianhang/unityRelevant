@@ -42,8 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Debug.cs" />
-    <Compile Include="FixPointMath.cs" />
-    <Compile Include="FloatL.cs" />
+    <Compile Include="FloatIMath.cs" />
+    <Compile Include="FloatI.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

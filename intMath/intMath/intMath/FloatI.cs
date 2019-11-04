@@ -7,11 +7,11 @@ using System.Text;
 //{
 
     [System.Serializable]
-    public struct FloatL
+    public struct FloatI
     {
-        public static FloatL MaxValue = new FloatL(Int32.MaxValue / m_denominator);
-        public static FloatL MinValue = new FloatL(Int32.MinValue / m_denominator);
-        public static FloatL Epsilon = new FloatL((double)1 / m_denominator);
+        public static FloatI MaxValue = new FloatI(Int32.MaxValue / m_denominator);
+        public static FloatI MinValue = new FloatI(Int32.MinValue / m_denominator);
+        public static FloatI Epsilon = new FloatI((double)1 / m_denominator);
         public int m_numerator; // 分子
         public const int m_denominator = 1000;
 
@@ -20,105 +20,105 @@ using System.Text;
         //public const long m_maybeOverflow = m_denominator * 10000;
 
 
-        public FloatL(float a)
+        public FloatI(float a)
         {
-            m_numerator = (int)FixPointMath.RoundToLong(a * m_denominator);
+            m_numerator = (int)FloatIMath.RoundToLong(a * m_denominator);
         }
 
-        public FloatL(double a)
+        public FloatI(double a)
         {
-            m_numerator = FixPointMath.RoundToInt(a * m_denominator);
+            m_numerator = FloatIMath.RoundToInt(a * m_denominator);
         }
 
-        public FloatL(int a)
+        public FloatI(int a)
         {
             m_numerator = a * m_denominator;
         }
 
-        public static implicit operator FloatL(int n)
+        public static implicit operator FloatI(int n)
         {
-            FloatL ret = new FloatL(n);
+            FloatI ret = new FloatI(n);
             return ret;
         }
 
-        public static implicit operator FloatL(float n)
+        public static implicit operator FloatI(float n)
         {
-            FloatL ret = new FloatL(n);
+            FloatI ret = new FloatI(n);
             return ret;
         }
 
-        public static implicit operator FloatL(double n)
+        public static implicit operator FloatI(double n)
         {
-            FloatL ret = new FloatL(n);
+            FloatI ret = new FloatI(n);
             return ret;
         }
 
-        public static FloatL operator -(FloatL a)
+        public static FloatI operator -(FloatI a)
         {
-            FloatL ret = new FloatL();
+            FloatI ret = new FloatI();
             ret.m_numerator = -a.m_numerator;
             return ret;
         }
 
-    public static FloatL operator +(FloatL a)
+    public static FloatI operator +(FloatI a)
     {
         //FloatL ret = new FloatL();
         //ret.m_numerator = -a.m_numerator;
         return a;
     }
 
-    public static bool operator !=(FloatL lhs, FloatL rhs)
+    public static bool operator !=(FloatI lhs, FloatI rhs)
         {
             return lhs.m_numerator != rhs.m_numerator;
         }
 
-        public static bool operator ==(FloatL lhs, FloatL rhs)
+        public static bool operator ==(FloatI lhs, FloatI rhs)
         {
             return lhs.m_numerator == rhs.m_numerator;
         }
 
-        public static bool operator > (FloatL lhs, FloatL rhs)
+        public static bool operator > (FloatI lhs, FloatI rhs)
         {
             return lhs.m_numerator > rhs.m_numerator;
         }
 
-        public static bool operator <(FloatL lhs, FloatL rhs)
+        public static bool operator <(FloatI lhs, FloatI rhs)
         {
             return lhs.m_numerator < rhs.m_numerator;
         }
 
-        public static bool operator >= (FloatL lhs, FloatL rhs)
+        public static bool operator >= (FloatI lhs, FloatI rhs)
         {
             return lhs.m_numerator >= rhs.m_numerator;
         }
 
-        public static bool operator <=(FloatL lhs, FloatL rhs)
+        public static bool operator <=(FloatI lhs, FloatI rhs)
         {
             return lhs.m_numerator <= rhs.m_numerator;
         }
 
-        public static FloatL operator %(FloatL lhs, FloatL rhs)
+        public static FloatI operator %(FloatI lhs, FloatI rhs)
         {
-            FloatL ret = new FloatL();
+            FloatI ret = new FloatI();
             ret.m_numerator = lhs.m_numerator % rhs.m_numerator;
             return ret;
         }
 
-        public static FloatL operator +(FloatL a, FloatL b)
+        public static FloatI operator +(FloatI a, FloatI b)
         {
-            FloatL ret = new FloatL();
+            FloatI ret = new FloatI();
             ret.m_numerator = a.m_numerator + b.m_numerator;
             return ret;
         }
 
-        public static FloatL operator -(FloatL a, FloatL b)
+        public static FloatI operator -(FloatI a, FloatI b)
         {
-            FloatL ret = new FloatL();
+            FloatI ret = new FloatI();
             ret.m_numerator = a.m_numerator - b.m_numerator;
             return ret;
         }
 
-        public static FloatL operator *(FloatL a, FloatL b)
+        public static FloatI operator *(FloatI a, FloatI b)
         {
             
 //         if (a.m_numerator > m_maybeOverflow
@@ -151,14 +151,14 @@ using System.Text;
 //             return ret;
 //         }
             long tmp = a.m_numerator * b.m_numerator / m_denominator;
-            FloatL ret = new FloatL();
+            FloatI ret = new FloatI();
             ret.m_numerator = (int)tmp;
             return ret;
         }
 
-        public static FloatL operator /(FloatL a, FloatL b)
+        public static FloatI operator /(FloatI a, FloatI b)
         {
-            FloatL ret = new FloatL();
+            FloatI ret = new FloatI();
             
             if(b.m_numerator == 0)
             {
@@ -212,27 +212,27 @@ using System.Text;
 
         public override bool Equals(object other)
         {
-            if (!(other is FloatL))
+            if (!(other is FloatI))
             {
                 return false;
             }
-            FloatL otherFloatL = (FloatL)other;
+            FloatI otherFloatL = (FloatI)other;
             return this.m_numerator == otherFloatL.m_numerator;
         }
 
-    public static explicit operator float(FloatL a)
+    public static explicit operator float(FloatI a)
     {
         // todo 据说各平台double降级为float会比较一致 有待实际测试
         return (float)a.m_numerator / m_denominatorFloat;
     }
 
-    public static explicit operator double(FloatL a)
+    public static explicit operator double(FloatI a)
     {
         // todo 据说各平台double降级为float会比较一致 有待实际测试
         return (double)a.m_numerator / m_denominatorDouble;
     }
 
-    public static explicit operator int(FloatL a)
+    public static explicit operator int(FloatI a)
     {
         return (int)(a.m_numerator / m_denominator);
     }
