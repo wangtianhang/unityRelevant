@@ -1,0 +1,6 @@
+E:\gitHub\unityRelevant\unityRelevant\intMath\intMath\intMath\bin\Debug\intMath.exe.config
+E:\gitHub\unityRelevant\unityRelevant\intMath\intMath\intMath\obj\Debug\intMath.csprojResolveAssemblyReference.cache
+E:\gitHub\unityRelevant\unityRelevant\intMath\intMath\intMath\bin\Debug\intMath.exe
+E:\gitHub\unityRelevant\unityRelevant\intMath\intMath\intMath\bin\Debug\intMath.pdb
+E:\gitHub\unityRelevant\unityRelevant\intMath\intMath\intMath\obj\Debug\intMath.exe
+E:\gitHub\unityRelevant\unityRelevant\intMath\intMath\intMath\obj\Debug\intMath.pdb
