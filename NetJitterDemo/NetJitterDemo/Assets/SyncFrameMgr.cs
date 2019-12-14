@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Text;
 using UnityEngine;
 
 public class SyncFrameMgr : MonoBehaviour
@@ -146,12 +147,15 @@ public class SyncFrameMgr : MonoBehaviour
 				m_fakeTimeList.Add(random);
 			}
 			m_fakeTimeList.Sort();
-//				string text = "";
-//				foreach(var iter in m_fakeTimeList)
-//				{
-//					text += iter.ToString() + "\n";
-//				}
-//				Debug.Log("===============================" + text);
+			
+			//string text = "";
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < m_fakeTimeList.Count - 1; i++)
+			{
+				float span = m_fakeTimeList[i + 1] - m_fakeTimeList[i];
+				sb.Append(span.ToString()).Append("\n");
+			}
+			Debug.Log("生成的随机序列 " + sb.ToString());
 		}
 			
 		while (m_fakeTimeList.Count != 0)
