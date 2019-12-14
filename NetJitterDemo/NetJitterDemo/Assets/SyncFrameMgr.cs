@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.NetworkInformation;
 using UnityEngine;
 
 public class SyncFrameMgr : MonoBehaviour
@@ -9,6 +11,7 @@ public class SyncFrameMgr : MonoBehaviour
 		None,
 		Local,
 		FakeNet,
+		//PingNetWork,
 	}
 	
 	public const float m_tickSpan = 0.033f;
@@ -22,12 +25,17 @@ public class SyncFrameMgr : MonoBehaviour
 	double m_CurPkgDelay;
 	double m_AvgFrameDelay;
 	
-	//====================
+	//=========伪造网络抖动=========
 	public const int m_fakeSpanTime = 60;
 	public double m_fakeAccTime = m_fakeSpanTime;
 	public List<float> m_fakeTimeList = new List<float>();
 	//public int m_lastFakeFrameTime = 0;
-	//===============
+	//==================
+	
+	//==========利用ping百度开始==============
+	public float m_pingAcc = 0;
+	//private System.Net.NetworkInformation.Ping m_ping;
+	//==========利用ping百度结束==============
 	
 	// Use this for initialization
 	void Start () 
@@ -35,8 +43,11 @@ public class SyncFrameMgr : MonoBehaviour
 		Entity entity = new Entity();
 		entity.Init();
 		m_entityList.Add(entity);
+
+		//m_ping = new System.Net.NetworkInformation.Ping();
+		//m_ping.PingCompleted += OnPingReceiveServerCommand;
 	}
-	
+
 	// Update is called once per frame
 	void Update ()
 	{
@@ -54,42 +65,69 @@ public class SyncFrameMgr : MonoBehaviour
 		}
 		else if (m_netMode == NetMode.FakeNet)
 		{
-			
-			
 			//============伪造抖动网络 begin=======================
 			FakeJitterNetwork(delta);
-			//============伪造抖动网络 end=======================
+			//============伪造抖动网络 end=======================	
+			HandleNetworkRelay(delta);
+		}
+//		else if (m_netMode == NetMode.PingNetWork)
+//		{
+//			SendPing(delta);
+//			HandleNetworkRelay(delta);
+//		}
+
+		OnRenderUpdate(Time.deltaTime);
+	}
+
+	void SendPing(float delta)
+	{
+		m_pingAcc += delta;
+		if (m_pingAcc >= SyncFrameMgr.m_tickSpan)
+		{
+			m_pingAcc -= SyncFrameMgr.m_tickSpan;
+			//m_ping.SendAsync("39.156.69.79", null);
+		}
+	}
+	
+	void OnPingReceiveServerCommand(object sender, PingCompletedEventArgs e)
+	{
+		m_ServerFrameCount += 1;
+		
+		Debug.Log(e.Reply.Status + " m_ServerFrameCount " + m_ServerFrameCount);
+		//System.Net.NetworkInformation.Ping ping = sender as System.Net.NetworkInformation.Ping;
+		//ping.Dispose();
+	}
+
+	void HandleNetworkRelay(float delta)
+	{
+		{
+			m_acc += delta;
+			int tryCount = (m_ServerFrameCount - m_ClientTickCount) / m_nDriftFactor;
+			tryCount = Mathf.Clamp(tryCount, 1, 100);
+			double delayS = m_acc - m_ServerFrameCount * SyncFrameMgr.m_tickSpan;
+			double avgDelayS = CalculateJitterDelay(delayS);
+			while (tryCount > 0)
 			{
-				m_acc += delta;
-				int tryCount = (m_ServerFrameCount - m_ClientTickCount) / m_nDriftFactor;
-				tryCount = Mathf.Clamp(tryCount, 1, 100);
-				double delayS = m_acc - m_ServerFrameCount * SyncFrameMgr.m_tickSpan;
-				double avgDelayS = CalculateJitterDelay(delayS);
-				while (tryCount > 0)
+				double clientTime = m_ClientTickCount * SyncFrameMgr.m_tickSpan;
+				double canUseTime = m_acc - (clientTime + avgDelayS);
+				if (canUseTime >= SyncFrameMgr.m_tickSpan)
 				{
-					double clientTime = m_ClientTickCount * SyncFrameMgr.m_tickSpan;
-					double canUseTime = m_acc - (clientTime + avgDelayS);
-					if (canUseTime >= SyncFrameMgr.m_tickSpan)
-					{
-						if(m_ClientTickCount >= m_ServerFrameCount)
-						{
-							tryCount = 0;
-						}
-						else
-						{
-							OnTick(SyncFrameMgr.m_tickSpan);
-							tryCount -= 1;
-						}
-					}
-					else
+					if(m_ClientTickCount >= m_ServerFrameCount)
 					{
 						tryCount = 0;
 					}
+					else
+					{
+						OnTick(SyncFrameMgr.m_tickSpan);
+						tryCount -= 1;
+					}
+				}
+				else
+				{
+					tryCount = 0;
 				}
 			}
 		}
-
-		OnRenderUpdate(Time.deltaTime);
 	}
 
 	void FakeJitterNetwork(float delta)
@@ -128,7 +166,7 @@ public class SyncFrameMgr : MonoBehaviour
 				//collection.m_commandList = GetMatchFakeCommand(m_battleModule.GetTimeHelper()._GetBattleStartTime());
 
 				//m_battleModule.GetFrameSyncMgr().AddServerCollection(collection);
-				OnReceiveServerCommand();
+				OnFakeReceiveServerCommand();
 			}
 			else
 			{
@@ -151,7 +189,7 @@ public class SyncFrameMgr : MonoBehaviour
 		return m_AvgFrameDelay;
 	}
 
-	void OnReceiveServerCommand()
+	void OnFakeReceiveServerCommand()
 	{
 		m_ServerFrameCount += 1;
 	}
