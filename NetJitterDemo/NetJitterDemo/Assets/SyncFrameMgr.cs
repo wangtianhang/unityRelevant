@@ -63,6 +63,7 @@ public class SyncFrameMgr : MonoBehaviour
 				m_acc -= SyncFrameMgr.m_tickSpan;
 				OnTick(SyncFrameMgr.m_tickSpan);
 			}
+			OnRenderUpdate(Time.deltaTime);
 		}
 		else if (m_netMode == NetMode.FakeNet)
 		{
@@ -70,6 +71,8 @@ public class SyncFrameMgr : MonoBehaviour
 			FakeJitterNetwork(delta);
 			//============伪造抖动网络 end=======================	
 			HandleNetworkRelay(delta);
+			
+			OnRenderUpdateV2(delta);
 		}
 //		else if (m_netMode == NetMode.PingNetWork)
 //		{
@@ -77,7 +80,7 @@ public class SyncFrameMgr : MonoBehaviour
 //			HandleNetworkRelay(delta);
 //		}
 
-		OnRenderUpdate(Time.deltaTime);
+		
 	}
 
 	void SendPing(float delta)
@@ -203,6 +206,14 @@ public class SyncFrameMgr : MonoBehaviour
 		foreach (var iter in m_entityList)
 		{
 			iter.OnRenderUpdate(delta);
+		}
+	}
+
+	void OnRenderUpdateV2(float delta)
+	{
+		foreach (var iter in m_entityList)
+		{
+			iter.OnRenderUpdateV2(delta);
 		}
 	}
 

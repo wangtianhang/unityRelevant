@@ -33,7 +33,7 @@ public class Entity
         m_renderAcc += delta;
         if (m_renderAcc > m_logicAcc)
         {
-            Debug.LogWarning("render over logic renderAcc " + m_renderAcc + " m_logicAcc " + m_logicAcc);
+            //Debug.LogWarning("render over logic renderAcc " + m_renderAcc + " m_logicAcc " + m_logicAcc);
         }
         m_renderAcc = Mathf.Clamp(m_renderAcc, m_logicAcc - SyncFrameMgr.m_tickSpan, m_logicAcc);
         float curOverTime = m_renderAcc - (m_logicAcc - SyncFrameMgr.m_tickSpan);
@@ -43,5 +43,17 @@ public class Entity
         Debug.DrawLine(m_renderGo.position, newRenderPos, Color.green, 3600);
         m_renderGo.position = newRenderPos;
         m_renderGo.rotation = Quaternion.Slerp(m_lastFrameLogicQua, m_logicTransform.rotation, weight);
+    }
+
+    public void OnRenderUpdateV2(float delta)
+    {
+        m_renderAcc += delta;
+        
+        float curOverTime = m_renderAcc - (m_logicAcc - SyncFrameMgr.m_tickSpan);
+        float weight = curOverTime / SyncFrameMgr.m_tickSpan;
+        
+        Vector3 newRenderPos = Vector3.LerpUnclamped(m_lastFrameLogicPos, m_logicTransform.position, weight);
+        Debug.DrawLine(m_renderGo.position, newRenderPos, Color.green, 3600);
+        m_renderGo.position = newRenderPos;
     }
 }
