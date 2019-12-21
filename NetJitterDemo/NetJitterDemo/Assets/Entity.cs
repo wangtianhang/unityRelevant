@@ -15,7 +15,7 @@ public class Entity
     public void Init()
     {
         m_logicTransform = new GameObject("logicGo").transform;
-        m_renderGo = GameObject.CreatePrimitive(PrimitiveType.Sphere).transform;
+        m_renderGo = GameObject.CreatePrimitive(PrimitiveType.Cube).transform;
         m_renderGo.name = "renderGo";
     }
     
@@ -25,7 +25,10 @@ public class Entity
         m_lastFrameLogicPos = m_logicTransform.position;
         m_lastFrameLogicQua = m_logicTransform.rotation;
         
-        m_logicTransform.transform.position = new Vector3(5 * Mathf.Sin(m_logicAcc * m_rotateSpeed), 0, 5 * Mathf.Cos(m_logicAcc * m_rotateSpeed));
+        Vector3 newPos = new Vector3(5 * Mathf.Sin(m_logicAcc * m_rotateSpeed), 0, 5 * Mathf.Cos(m_logicAcc * m_rotateSpeed));
+        m_logicTransform.transform.rotation = Quaternion.LookRotation(newPos - m_logicTransform.transform.position);
+        m_logicTransform.transform.position = newPos;
+        
     }
 
     public void OnRenderUpdate(float delta)
@@ -55,5 +58,6 @@ public class Entity
         Vector3 newRenderPos = Vector3.LerpUnclamped(m_lastFrameLogicPos, m_logicTransform.position, weight);
         Debug.DrawLine(m_renderGo.position, newRenderPos, Color.green, 3600);
         m_renderGo.position = newRenderPos;
+        m_renderGo.rotation = Quaternion.SlerpUnclamped(m_lastFrameLogicQua, m_logicTransform.rotation, weight);
     }
 }
