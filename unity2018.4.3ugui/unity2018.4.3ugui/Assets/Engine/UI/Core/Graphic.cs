@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 #if UNITY_EDITOR
 using System.Reflection;
 #endif
@@ -575,6 +576,7 @@ namespace UnityEngine.UI
 
         private void DoMeshGeneration()
         {
+            Debug.Log("Graphic.DoMeshGeneration threadId " + Thread.CurrentThread.ManagedThreadId);
             if (rectTransform != null && rectTransform.rect.width >= 0 && rectTransform.rect.height >= 0)
                 OnPopulateMesh(s_VertexHelper);
             else
